@@ -5,6 +5,7 @@ import "./veterinaria.css"; // Importar la hoja de estilos
 
 
 
+
 const ButtonLink = ({ children, link }) => (
   <a href={link} className="block">
     <button className="btn-link">
@@ -27,14 +28,17 @@ const VeterinariaAnimales = () => {
         <a href="#galeria">Galería</a>
         <a href="#contacto">Contacto</a>
       </nav>
+      
+      
       <motion.div className="content">
       <section id="servicios" className="my-8">
           <h2 className="text-3xl font-bold mb-6 text-green-600">Nuestros Servicios</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <ButtonLink link="/consulta-veterinaria">Consulta veterinaria</ButtonLink>
+            
             <ButtonLink link="/vacunacion-desparasitacion">Vacunación y desparasitación</ButtonLink>
             <ButtonLink link="/peluqueria-estetica">Peluquería y estética canina y felina</ButtonLink>
             <ButtonLink link="/consulta-informacion">Informacion de tu mascota </ButtonLink>
+            <ButtonLink link = "/registrar-mascota">Registrar Macota</ButtonLink>
           </div>
         </section>
         <section id="galeria" className="section">
@@ -51,7 +55,7 @@ const VeterinariaAnimales = () => {
           <h2>Contacto</h2>
           <p><Mail className="icon" /> contacto@amigospeludos.com</p>
           <p><Phone className="icon" /> +123 456 789</p>
-          <button className="btn">Agendar Cita</button>
+          <button className="btn"  >Agendar Cita</button>
         </section>
       </motion.div>
       <footer className="footer">Veterinaria Amigos Peludos © 2025</footer>

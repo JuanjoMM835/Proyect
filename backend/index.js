@@ -3,6 +3,14 @@ const cors = require('cors');
 
 const app = express();
 app.use(cors());
+
+
+app.use(cors({
+    origin: "http://localhost:3000",
+    methods: "POST",
+    allowedHeaders: ["Content-Type"]
+}));
+
 app.use(express.json());
 
 const rutas = require('./rutas'); // Importamos las rutas

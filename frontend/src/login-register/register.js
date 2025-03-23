@@ -19,7 +19,7 @@ const Register = () => {
     if (response.ok) {
       alert("Registro exitoso");
       localStorage.setItem("token", data.token); // Guardar token
-      navigate("/veterinaria"); // Redirigir a la página de la veterinaria
+      navigate("/veterinaria"); // Redirigir a la página del login 
     } else {
       alert("Error en el registro: " + data.error);
     }
