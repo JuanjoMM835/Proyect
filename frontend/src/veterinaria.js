@@ -1,7 +1,8 @@
 import { motion } from "framer-motion";
 import { Mail, PawPrint, Phone } from "lucide-react";
 import React from "react";
-import "./veterinaria.css"; // Importar la hoja de estilos
+
+import "./veterinaria.css";
 
 
 
@@ -15,8 +16,6 @@ const ButtonLink = ({ children, link }) => (
   </a>
 );
 
-
-
 const VeterinariaAnimales = () => {
   return (
     <div className="container">
@@ -29,16 +28,16 @@ const VeterinariaAnimales = () => {
         <a href="#contacto">Contacto</a>
       </nav>
       
-      
       <motion.div className="content">
       <section id="servicios" className="my-8">
           <h2 className="text-3xl font-bold mb-6 text-green-600">Nuestros Servicios</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             
-            <ButtonLink link="/vacunacion-desparasitacion">Vacunación y desparasitación</ButtonLink>
+            <ButtonLink link="/desparasitacion-vacunacion">Vacunación y desparasitación</ButtonLink>
             <ButtonLink link="/peluqueria-estetica">Peluquería y estética canina y felina</ButtonLink>
             <ButtonLink link="/consulta-informacion">Informacion de tu mascota </ButtonLink>
             <ButtonLink link = "/registrar-mascota">Registrar Macota</ButtonLink>
+            <ButtonLink link = "/galeria">Galeria Mascota</ButtonLink>
           </div>
         </section>
         <section id="galeria" className="section">
@@ -55,7 +54,8 @@ const VeterinariaAnimales = () => {
           <h2>Contacto</h2>
           <p><Mail className="icon" /> contacto@amigospeludos.com</p>
           <p><Phone className="icon" /> +123 456 789</p>
-          <button className="btn"  >Agendar Cita</button>
+          
+          <ButtonLink link = "/Agendar-Cita">Agendar Cita</ButtonLink>
         </section>
       </motion.div>
       <footer className="footer">Veterinaria Amigos Peludos © 2025</footer>
