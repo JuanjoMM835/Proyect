@@ -2,10 +2,10 @@ import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import Login from "./login-register/login";
 import PerfilUsuario from "./login-register/perfilUsuario";
 import Register from "./login-register/register";
-import Peluqueria from "./servicios/agendaCita";
 import AgendarCita from "./servicios/AgendarCita";
 import DesparaYVacuna from "./servicios/DesparaYVacuna";
 import LinkedListComponent from "./servicios/LinkedListComponent";
+import Peluqueria from "./servicios/Peluqueria";
 import { default as RegistrarM, default as Service } from "./servicios/service";
 import Veterinaria from "./veterinaria";
 function App() {
