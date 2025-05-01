@@ -9,8 +9,10 @@ const SECRETO_JWT = 'tu_secreto_super_seguro';
 // Registro de usuario
 router.post('/registro', async (req, res) => {
   const { nombre, edad, contrasena } = req.body;
+  
   try {
     const contrasenaEncriptada = await require('bcrypt').hash(contrasena, 10);
+    
     db.query(
       'INSERT INTO clientes (nombre, edad, password) VALUES (?, ?, ?)',
       [nombre, edad, contrasenaEncriptada],
@@ -19,13 +21,40 @@ router.post('/registro', async (req, res) => {
           console.error("Error en la base de datos:", err);
           return res.status(500).json({ error: 'Error al registrar usuario' });
         }
-        const token = jwt.sign({ id: resultado.insertId, nombre }, SECRETO_JWT, { expiresIn: '1h' });
-        res.json({ token });
+        
+        const idUsuario = resultado.insertId; // Obtiene el ID generado
+        const token = jwt.sign({ id: idUsuario, nombre }, SECRETO_JWT, { expiresIn: '1h' });
+        
+        res.json({ 
+          token,
+          idUsuario //  se envia el id en la respuesta del json 
+        });
       }
     );
+    
   } catch (error) {
     res.status(500).json({ error: 'Error interno del servidor' });
   }
+});
+
+router.get('/:idUsuario', (req, res) => {
+  const { idUsuario } = req.params;
+
+  db.query(
+    'SELECT * FROM mascotas WHERE usuario_id = ?',
+    [idUsuario],
+    (err, resultados) => {
+      if (err) {
+        console.error("Error en la DB:", err);
+        return res.status(500).json({ error: 'Error al obtener mascotas' });
+      }
+      
+      res.json({ 
+        mascotas: resultados,
+        mensaje: resultados.length === 0 ? 'No hay mascotas registradas' : ''
+      });
+    }
+  );
 });
 
 

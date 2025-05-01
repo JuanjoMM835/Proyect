@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "./estilosService.css";
+import "../Styles/estilosService.css";
 
 const RegistrarM = () => {
   const [especie, setEspecie] = useState("");

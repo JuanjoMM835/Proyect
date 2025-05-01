@@ -2,6 +2,7 @@ import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import Login from "./login-register/login";
 import PerfilUsuario from "./login-register/perfilUsuario";
 import Register from "./login-register/register";
+import Mascotas from "./mascotas/infoMascota";
 import AgendarCita from "./servicios/AgendarCita";
 import DesparaYVacuna from "./servicios/DesparaYVacuna";
 import LinkedListComponent from "./servicios/LinkedListComponent";
@@ -27,11 +28,13 @@ function App() {
         <Route path="/Agendar-Cita" element={<AgendarCita />} />
         <Route path="/galeria" element={<LinkedListComponent />} />
         <Route path="/consulta-informacion" element={<PerfilUsuario/>} />
+        <Route path="/:idUsuario" element={<Mascotas/>} />
+        
 
       </Routes>
     </Router>
+      
 
-    
   );
   
   

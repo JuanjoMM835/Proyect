@@ -1,7 +1,6 @@
 import { motion } from "framer-motion";
 import { Mail, PawPrint, Phone } from "lucide-react";
 import React from "react";
-
 import "./veterinaria.css";
 
 
@@ -35,7 +34,7 @@ const VeterinariaAnimales = () => {
           <div className="vet-services">
             <VetButton link="/desparasitacion-vacunacion">Vacunación y desparasitación</VetButton>
             <VetButton link="/peluqueria-estetica">Peluquería y estética canina y felina</VetButton>
-            <VetButton link="/consulta-informacion">Información de tu mascota</VetButton>
+            <VetButton link="/:idUsuario">Información de tu mascota</VetButton>
             <VetButton link="/registrar-mascota">Registrar Mascota</VetButton>
             <VetButton link="/galeria">Galería Mascota</VetButton>
           </div>
@@ -57,6 +56,7 @@ const VeterinariaAnimales = () => {
           <p className="vet-contact__info"><Mail className="vet-contact__icon" /> contacto@amigospeludos.com</p>
           <p className="vet-contact__info"><Phone className="vet-contact__icon" /> +123 456 789</p>
           <VetButton link="/Agendar-Cita">Agendar Cita</VetButton>
+          
         </section>
       </motion.div>
       

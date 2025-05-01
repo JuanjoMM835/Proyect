@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from "react";
-import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
-import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
-import './styles.css'
+import FullCalendar from "@fullcalendar/react";
+import timeGridPlugin from "@fullcalendar/timegrid";
+import React, { useEffect, useState } from "react";
+import '../Styles/styles.css';
 
 const CalendarioCitas = () => {
   const [citas, setCitas] = useState([]);

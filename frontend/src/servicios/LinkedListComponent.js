@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import LinkedList from "./LinkedList"; 
-import "./galeria.css";
+import "../Styles/galeria.css";
+import LinkedList from "./LinkedList";
 
 const LinkedListComponent = () => {
     const [list] = useState(new LinkedList());  

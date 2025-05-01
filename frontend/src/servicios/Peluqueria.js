@@ -1,7 +1,7 @@
 // Peluqueria.jsx
 import { Calendar, Scissors, Star } from "lucide-react";
 import { useState } from "react";
-import "./estilosPeluqueria.css";
+import "../Styles/estilosPeluqueria.css";
 import { CorteStrategies } from "./strategies";
 
 const Peluqueria = () => {

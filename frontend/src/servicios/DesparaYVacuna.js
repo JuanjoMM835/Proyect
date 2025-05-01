@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import "./estiloDeVa.css";
+import "../Styles/estiloDeVa.css";
 
 const vacunasPredefinidas = [
   "Rabia",

@@ -1,7 +1,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "./login.css"; // Reutilizar los mismos estilos
+import "../Styles/login.css"; // Reutilizar los mismos estilos
 
 const Register = () => {
   const [nombre, setNombre] = useState("");
@@ -14,24 +14,33 @@ const Register = () => {
 
   const handleRegister = async (e) => {
     e.preventDefault();
-    const response = await fetch("http://localhost:5006/api/registro", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ nombre, edad, contrasena }),
-    });
+    try {
+      const response = await fetch("http://localhost:5006/api/registro", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ nombre, edad, contrasena }),
+      });
+  
+      const data = await response.json();
+      
+      if (response.ok) {
+        setShowSuccess(true);
+        // Almacena ambos valores
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("idUsuario", data.idUsuario); // se almacena el id en el localstorage al igual que el token era re facil jajaja hacer lo mismo que el token pero con el id de usuario 
 
-    const data = await response.json();
-    if (response.ok) {
-      setShowSuccess(true);
-      localStorage.setItem("token", data.token);
-      setTimeout(() => navigate("/veterinaria"), 2000);
-    } else {
-      setErrorMessage(data.error || "Error desconocido");
+        setTimeout(() => navigate("/"), 2000);
+      } else {
+        setErrorMessage(data.error || "Error desconocido");
+        setShowError(true);
+        setTimeout(() => setShowError(false), 3000);
+      }
+    } catch (error) {
+      setErrorMessage("Error de conexión");
       setShowError(true);
       setTimeout(() => setShowError(false), 3000);
     }
   };
-
   return (
     <div className="auth-login">
       <AnimatePresence>

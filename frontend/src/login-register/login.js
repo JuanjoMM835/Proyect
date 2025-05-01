@@ -1,8 +1,8 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import "../Styles/login.css";
 import "../Styles/loginmessage.css";
-import "./login.css";
 
 const Login = () => {
   const [nombre, setNombre] = useState("");
