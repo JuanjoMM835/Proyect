@@ -1,21 +1,18 @@
 import { motion } from "framer-motion";
 import { Mail, PawPrint, Phone } from "lucide-react";
-import React from "react";
+import { Link } from "react-router-dom";
 import "./veterinaria.css";
 
-
-
-
 const VetButton = ({ children, link }) => (
-  <a href={link} className="vet-btn__container">
+  <Link to={link} className="vet-btn__container">
     <button className="vet-btn">
       <PawPrint className="vet-btn__icon" size={24} />
       {children}
     </button>
-  </a>
+  </Link>
 );
 
-const VeterinariaAnimales = () => {
+const Veterinaria = () => {  
   return (
     <div className="vet-main">
       <header className="vet-main__header">
@@ -23,9 +20,9 @@ const VeterinariaAnimales = () => {
       </header>
       
       <nav className="vet-nav">
-        <a href="#servicios" className="vet-nav__item">Servicios</a>
-        <a href="#galeria" className="vet-nav__item">Galería</a>
-        <a href="#contacto" className="vet-nav__item">Contacto</a>
+        <Link to="#servicios" className="vet-nav__item">Servicios</Link>
+        <Link to="#galeria" className="vet-nav__item">Galería</Link>
+        <Link to="#contacto" className="vet-nav__item">Contacto</Link>
       </nav>
       
       <motion.div className="vet-content">
@@ -34,8 +31,8 @@ const VeterinariaAnimales = () => {
           <div className="vet-services">
             <VetButton link="/desparasitacion-vacunacion">Vacunación y desparasitación</VetButton>
             <VetButton link="/peluqueria-estetica">Peluquería y estética canina y felina</VetButton>
-            <VetButton link="/:idUsuario">Información de tu mascota</VetButton>
-            <VetButton link="/registrar-mascota">Registrar Mascota</VetButton>
+            <VetButton link="/mascotas">Información de tu mascota</VetButton>
+            <VetButton link="/Registrar-Mascota">Registrar Mascota</VetButton>
             <VetButton link="/galeria">Galería Mascota</VetButton>
           </div>
         </section>
@@ -45,7 +42,11 @@ const VeterinariaAnimales = () => {
           <div className="vet-gallery">
             {["Perrito.jpg", "imagen2.jpg", "imagen4.jpg"].map((image, index) => (
               <div key={index} className="vet-gallery__card">
-                <img src={`/images/${image}`} alt="Mascota feliz" className="vet-gallery__img" />
+                <img 
+                  src={`${process.env.PUBLIC_URL}/images/${image}`} 
+                  alt="Mascota feliz" 
+                  className="vet-gallery__img" 
+                />
               </div>
             ))}
           </div>
@@ -55,8 +56,7 @@ const VeterinariaAnimales = () => {
           <h2 className="vet-section__title">Contacto</h2>
           <p className="vet-contact__info"><Mail className="vet-contact__icon" /> contacto@amigospeludos.com</p>
           <p className="vet-contact__info"><Phone className="vet-contact__icon" /> +123 456 789</p>
-          <VetButton link="/Agendar-Cita">Agendar Cita</VetButton>
-          
+          <VetButton link="/agendar-Cita">Agendar Cita</VetButton>
         </section>
       </motion.div>
       
@@ -64,4 +64,5 @@ const VeterinariaAnimales = () => {
     </div>
   );
 };
-export default VeterinariaAnimales;
+
+export default Veterinaria; 

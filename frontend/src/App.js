@@ -1,13 +1,14 @@
+
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
-import Login from "./login-register/login";
-import PerfilUsuario from "./login-register/perfilUsuario";
-import Register from "./login-register/register";
+import CalendarioCitas from "./Contenedores/CalendarioCitas/calendarioCitas";
 import Mascotas from "./mascotas/infoMascota";
-import AgendarCita from "./servicios/AgendarCita";
+import { LoginPagina } from "./paginas/LoginPagina";
+import Peluqueria from "./paginas/Peluqueria";
+import RegistrarMascota from "./paginas/RegistrarMascota";
+import RegistroPagina from "./paginas/RegistroPagina";
 import DesparaYVacuna from "./servicios/DesparaYVacuna";
 import LinkedListComponent from "./servicios/LinkedListComponent";
-import Peluqueria from "./servicios/Peluqueria";
-import { default as RegistrarM, default as Service } from "./servicios/service";
+
 import Veterinaria from "./veterinaria";
 function App() {
 
@@ -18,16 +19,16 @@ function App() {
       
       
       <Routes>
-        <Route path="/" element={<Login />} />
-        <Route path="/register" element={<Register />} />
+        <Route path="/" element={<LoginPagina />} />
+        <Route path="/register" element={<RegistroPagina />} />
         <Route path="/veterinaria" element={<Veterinaria />} />
-        <Route path="/servicios/service.js" element={<Service />} />
-        <Route path = "/Registrar-Mascota" element={<RegistrarM/>}/>
+     
+        <Route path = "/Registrar-Mascota" element={<RegistrarMascota/>}/>
         <Route path="/desparasitacion-vacunacion" element={<DesparaYVacuna/>}/>
         <Route path="/peluqueria-estetica" element={<Peluqueria/>}/>
-        <Route path="/Agendar-Cita" element={<AgendarCita />} />
+        <Route path="/agendar-Cita" element={<CalendarioCitas />} />
         <Route path="/galeria" element={<LinkedListComponent />} />
-        <Route path="/consulta-informacion" element={<PerfilUsuario/>} />
+        
         <Route path="/:idUsuario" element={<Mascotas/>} />
         
 
