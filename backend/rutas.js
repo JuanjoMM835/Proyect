@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const db = require('./bd'); // Importamos la conexión a la base de datos
 
-const SECRETO_JWT = 'tu_secreto_super_seguro';
+
 
 // Registro de usuario
 router.post('/registro', async (req, res) => {
@@ -41,7 +41,7 @@ router.get('/:idUsuario', (req, res) => {
   const { idUsuario } = req.params;
 
   db.query(
-    'SELECT * FROM mascotas WHERE usuario_id = ?',
+    'SELECT * FROM mascotas WHERE id_cliente = ?',
     [idUsuario],
     (err, resultados) => {
       if (err) {
@@ -59,25 +59,105 @@ router.get('/:idUsuario', (req, res) => {
 
 
 // Inicio de sesión
-router.post('/inicio-sesion', async (req, res) => {
+require('dotenv').config();
+
+// Configuración JWT
+const SECRETO_JWT = process.env.JWT_SECRET || 'secreto_desarrollo_123';
+
+// Ruta de login mejorada
+router.post('/inicio-sesion', (req, res) => {
   const { nombre, contrasena } = req.body;
-  try {
-    db.query('SELECT * FROM clientes WHERE nombre = ?', [nombre], async (err, filas) => {
-      if (err || filas.length === 0) {
-        return res.status(401).json({ error: 'Credenciales inválidas' });
-      }
-      const usuario = filas[0];
-      const contrasenaValida = await require('bcrypt').compare(contrasena, usuario.password);
-      if (!contrasenaValida) {
-        return res.status(401).json({ error: 'Credenciales inválidas' });
-      }
-      const token = jwt.sign({ id: usuario.id, nombre: usuario.nombre }, SECRETO_JWT, { expiresIn: '1h' });
-      res.json({ token });
-    });
-  } catch (error) {
-    res.status(500).json({ error: 'Error interno del servidor' });
+
+  // Validación de campos
+  if (!nombre || !contrasena) {
+    return res.status(400).json({ error: 'Nombre y contraseña son requeridos' });
   }
+
+  // Consulta a la base de datos
+  db.query(
+    'SELECT id, nombre, password FROM clientes WHERE nombre = ?',
+    [nombre],
+    async (err, resultados) => {
+      if (err) {
+        console.error('Error en la base de datos:', err);
+        return res.status(500).json({ error: 'Error interno del servidor' });
+      }
+
+      if (resultados.length === 0) {
+        return res.status(401).json({ error: 'Credenciales inválidas' });
+      }
+
+      const usuario = resultados[0];
+      try {
+        // Comparación de contraseñas hasheadas
+        const contrasenaValida = await bcrypt.compare(contrasena, usuario.password);
+        
+        if (!contrasenaValida) {
+          return res.status(401).json({ error: 'Credenciales inválidas' });
+        }
+
+        // Generación de token JWT
+        const token = jwt.sign(
+          {
+            id: usuario.id,
+            nombre: usuario.nombre,
+            exp: Math.floor(Date.now() / 1000) + (60 * 60) // 1 hora
+          },
+          SECRETO_JWT
+        );
+
+        res.json({ 
+          token,
+          usuario: {
+            id: usuario.id,
+            nombre: usuario.nombre
+          }
+        });
+
+      } catch (error) {
+        console.error('Error al comparar contraseñas:', error);
+        res.status(500).json({ error: 'Error interno del servidor' });
+      }
+    }
+  );
 });
+
+// Middleware de autenticación
+const autenticar = (req, res, next) => {
+  const authHeader = req.headers.authorization;
+  
+  if (!authHeader?.startsWith('Bearer ')) {
+    return res.status(401).json({ error: 'Token de autenticación requerido' });
+  }
+
+  const token = authHeader.split(' ')[1];
+  
+  jwt.verify(token, SECRETO_JWT, (err, decoded) => {
+    if (err) {
+      return res.status(403).json({ error: 'Token inválido o expirado' });
+    }
+    req.usuario = decoded;
+    next();
+  });
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // Registrar mascota
 router.post('/registrar-mascota', async (req, res) => {
@@ -211,137 +291,57 @@ router.post('/registrar-mascota', async (req, res) => {
   
 
 
-router.post('/agenda'  , (req,res)=>{
-  const {nombre , id } = req.body; 
+router.post('/agendar-cita', autenticar, (req, res) => {
+    const { idCliente, idMascota, motivo, fechaHora } = req.body;
 
-  if (!especie || !raza || !nombre || !edad) {
-    console.log(" Faltan campos en la solicitud");
-    return res.status(400).json({ error: "Todos los campos son obligatorios" });
-  }
-  const sql = 'INSERT INTO  mascotas (nombre , id ) VALUES (?,?)'
-  db.query(sql, [nombre , id ], (err, resultado) => {
-    if (err) {
-      console.error(" Error en la base de datos:", err);
-      return res.status(500).json({ error: "Error al registrar mascota" });
+    // Validar campos requeridos
+    if (!idCliente || !idMascota || !motivo || !fechaHora) {
+        return res.status(400).json({ error: "Todos los campos son obligatorios" });
     }
-    console.log("Cita Agendada con exito ");
-    res.status(201).json({ message: "Cita registrada con exito " });
-  })
-}); 
 
-router.get('/', (req, res) => {
-  res.send('Servidor funcionando correctamente 🚀');
-});
+    // Validar tipos de datos
+    if (isNaN(idCliente)) return res.status(400).json({ error: "ID Cliente inválido" });
+    if (isNaN(idMascota)) return res.status(400).json({ error: "ID Mascota inválido" });
 
-router.get('/citas', (req, res) => {
-  db.query('SELECT * FROM citas', (err, resultados) => {
-      if (err) {
-          console.error('Error al obtener citas:', err);
-          return res.status(500).json({ error: 'Error interno del servidor' });
-      }
-      res.json(resultados);
-  });
-});
-router.post("info",(req , res)=>{
-   const [ nombre , id , especie , raza , edad , imagen] = req.body; 
-   db.query("SELECT * FROM mascotas where nombre , id , especie , raza , edad , imagen  ")
+    // Formatear fecha para MySQL
+    const fechaFormateada = new Date(fechaHora)
+        .toISOString()
+        .slice(0, 19)
+        .replace('T', ' ');
 
-
-
-
-
-
-})
-
-router.post('/agendar-cita', (req, res) => {
-  console.log("Datos recibidos:", req.body);
-
-  let { idCliente, idMascota, motivo, fechaHora } = req.body;
-
-  if ([idCliente, idMascota, motivo, fechaHora].some(campo => campo === undefined || campo === null || campo === '')) {
-      console.log("Faltan campos en la solicitud");
-      return res.status(400).json({ error: "Todos los campos son obligatorios" });
-  }
-
-  // Convertir la fecha al formato correcto para MySQL
-  fechaHora = fechaHora.replace("T", " ") + ":00";
-  console.log("Fecha convertida:", fechaHora);
-
-  const sql = 'INSERT INTO citas (id_cliente, id_mascota, motivo, fecha_hora) VALUES (?, ?, ?, ?)';
-  db.query(sql, [idCliente, idMascota, motivo, fechaHora], (err, resultado) => {
-      if (err) {
-          console.error("Error en la base de datos:", err);
-          return res.status(500).json({ error: "Error al agendar la cita", detalle: err.message });
-      }
-
-      console.log("Cita agendada con éxito", resultado);
-      res.status(201).json({ mensaje: "Cita registrada con éxito" });
-  });
-});
-// 1. Ruta para obtener el perfil del usuario (validando token)
-router.get('/perfil', async (req, res) => {
-  // 1. Verificar el token
-  const authHeader = req.headers.authorization;
-  
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    return res.status(401).json({ 
-      success: false,
-      error: "Formato de token inválido. Use 'Bearer [token]'" 
-    });
-  }
-
-  const token = authHeader.split(' ')[1];
-
-  try {
-    // 2. Verificar y decodificar el token
-    const decoded = jwt.verify(token, 'TU_SECRETO_JWT');
+    // Validar relación mascota-cliente
+    const sqlVerificacion = `SELECT id FROM mascotas 
+                           WHERE id = ? AND id_cliente = ?`;
     
-    // 3. Validar que el token tenga el campo necesario
-    if (!decoded.id_usuario) { // Cambié a id_usuario que es más estándar
-      return res.status(401).json({
-        success: false,
-        error: "Token no contiene la identificación del usuario"
-      });
-    }
+    db.query(sqlVerificacion, [idMascota, idCliente], (err, resultados) => {
+        if (err) return res.status(500).json({ error: "Error de verificación" });
+        if (resultados.length === 0) {
+            return res.status(400).json({ error: "La mascota no pertenece al cliente" });
+        }
 
-    // 4. Consultar la base de datos
-    const [rows] = await pool.query(
-      'SELECT id, nombre, email FROM usuarios WHERE id = ?', 
-      [decoded.id_usuario]
-    );
+        // Insertar cita
+        const sqlInsert = `INSERT INTO citas 
+            (id_cliente, id_mascota, motivo, fecha_hora)
+            VALUES (?, ?, ?, ?)`;
 
-    if (rows.length === 0) {
-      return res.status(404).json({
-        success: false,
-        error: "Usuario no encontrado en la base de datos"
-      });
-    }
-
-    // 5. Responder con los datos del usuario
-    res.json({
-      success: true,
-      data: rows[0]
+        db.query(sqlInsert, 
+            [idCliente, idMascota, motivo, fechaFormateada],
+            (err, resultado) => {
+                if (err) {
+                    console.error("Error en la base de datos:", err);
+                    return res.status(500).json({ 
+                        error: "Error al agendar la cita",
+                        detalle: err.message 
+                    });
+                }
+                res.status(201).json({ 
+                    mensaje: "Cita registrada con éxito",
+                    id: resultado.insertId
+                });
+            }
+        );
     });
-
-  } catch (error) {
-    console.error('Error en /perfil:', error);
-    
-    // Manejo específico de errores de JWT
-    if (error.name === 'JsonWebTokenError') {
-      return res.status(401).json({
-        success: false,
-        error: "Token inválido o expirado"
-      });
-    }
-
-    // Otros errores
-    res.status(500).json({
-      success: false,
-      error: "Error interno del servidor"
-    });
-  }
 });
-
 // 2. Ruta para obtener mascotas del usuario
 // ✅ Correcto: El backend usa id_cliente (igual que la BD)
 router.get('/mascotas', async (req, res) => {
