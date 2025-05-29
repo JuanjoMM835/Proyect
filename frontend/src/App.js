@@ -8,6 +8,7 @@ import Peluqueria from "./paginas/Peluqueria";
 import PerfilBuilderPage from "./paginas/PerfilBuilderPage";
 import RegistrarMascota from "./paginas/RegistrarMascota";
 import RegistroPagina from "./paginas/RegistroPagina";
+import TreatmentTemplatesPage from "./paginas/TreatmentTemplatesPage";
 import DesparaYVacuna from "./servicios/DesparaYVacuna";
 import LinkedListComponent from "./servicios/LinkedListComponent";
 import Veterinaria from "./veterinaria";
@@ -26,7 +27,8 @@ function App() {
         <Route path="/galeria" element={<LinkedListComponent />} />
         <Route path="/Calculadora" element={<FoodCalculatorPage/>} />
         <Route path="/:idUsuario" element={<Mascotas/>} />
-        <Route path="/crear-perfil" element={<PerfilBuilderPage />} />
+        <Route path="/treatment-templates" element={<TreatmentTemplatesPage />} />
+      <Route path="/crear-perfil" element={<PerfilBuilderPage />} />
       </Routes>
     </Router>
   );

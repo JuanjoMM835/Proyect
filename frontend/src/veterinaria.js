@@ -43,6 +43,9 @@ const Veterinaria = () => {
             <VetButton link="/galeria">Galería Mascota</VetButton>
             <VetButton link= "/Calculadora">Alimentacion de tu Mascota</VetButton>
              <VetButton link="/crear-perfil">Creador de Perfiles</VetButton>
+             <VetButton link="/treatment-templates">Plantillas caso Veterinario</VetButton>
+
+            
           </div>
         </section>
 
