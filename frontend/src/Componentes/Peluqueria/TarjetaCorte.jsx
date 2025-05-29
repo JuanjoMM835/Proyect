@@ -1,12 +1,12 @@
 import { Calendar, Star } from "lucide-react";
 
-const TarjetaCorte = ({ corte }) => (
+const TarjetaCorte = ({ corte, onAgendar }) => (
   <article className={`tarjeta ${corte.destacado ? 'destacada' : ''}`}>
     {corte.destacado && <div className="badge"><Star size={16}/> Popular</div>}
     <img src={`/cortes/${corte.imagen}`} alt={corte.nombre} />
     <h3>{corte.nombre}</h3>
     <p>${corte.precio}</p>
-    <button className="btn-agendar">
+    <button className="btn-agendar" onClick={() => onAgendar(corte)}>
       <Calendar size={18}/>
       Agendar
     </button>
